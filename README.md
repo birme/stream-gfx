@@ -56,6 +56,34 @@ A web application for creating beautiful countdown timers and overlay slates for
 
 ## Quick Start
 
+### Option 1: Docker (Recommended)
+
+1. **Run with Docker**
+   ```bash
+   # Default port 8080
+   docker run -p 8080:8080 -e PORT=8080 stream-graphics-generator
+   
+   # Custom port
+   docker run -p 3000:3000 -e PORT=3000 stream-graphics-generator
+   ```
+
+2. **Or use Docker Compose**
+   ```bash
+   git clone https://github.com/yourusername/stream-graphics-generator.git
+   cd stream-graphics-generator
+   
+   # Default port 8080
+   docker-compose up
+   
+   # Custom port
+   PORT=3000 docker-compose up
+   ```
+
+3. **Open in Browser**
+   Navigate to `http://localhost:8080` (or your custom port)
+
+### Option 2: Local Development
+
 1. **Download or Clone**
    ```bash
    git clone https://github.com/yourusername/stream-graphics-generator.git
@@ -77,17 +105,52 @@ A web application for creating beautiful countdown timers and overlay slates for
 3. **Open in Browser**
    Navigate to `http://localhost:8000`
 
-4. **Configure Your Slate**
+## Usage
+
+1. **Configure Your Slate**
    - Choose your slate type (Timer, Thank You, or Resuming)
    - Customize messages and settings
    - Select theme and font size
    - Generate URL
 
-5. **Add to OBS**
+2. **Add to OBS**
    - Copy the generated URL
    - In OBS, add a "Browser Source"
    - Paste the URL
    - Set width: 1920, height: 1080 (or your stream resolution)
+
+## Docker Deployment
+
+### Environment Variables
+
+- **`PORT`** - Port to listen on (default: 80 in container, 8080 in docker-compose)
+
+### Building the Image
+
+```bash
+# Build the image
+docker build -t stream-graphics-generator .
+
+# Run on custom port
+docker run -p 3000:3000 -e PORT=3000 stream-graphics-generator
+```
+
+### Production Deployment
+
+```bash
+# Using docker-compose for production
+PORT=80 docker-compose up -d
+
+# Check container health
+docker-compose ps
+```
+
+The container includes:
+- ✅ Nginx web server with optimized configuration
+- ✅ Gzip compression enabled
+- ✅ Security headers configured
+- ✅ Health check endpoint at `/health`
+- ✅ Configurable port via environment variable
 
 ## File Structure
 

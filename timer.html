@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Countdown Timer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Theme Styles */
+        body.dark {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460, #1a1a2e, #2a2a4e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+        }
+        
+        body.light {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2, #e8f4f8, #d6e7f0, #f5f7fa);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #333333;
+        }
+        
+        body.neon {
+            background: linear-gradient(135deg, #000011, #001122, #000033, #001144, #000011);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #00ffff;
+        }
+        
+        body.minimal {
+            background: linear-gradient(135deg, #ffffff, #f8f8f8, #f0f0f0, #f8f8f8, #ffffff);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #000000;
+        }
+        
+        body.sunset {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b, #ff6b35, #ff9068, #ff7e5f);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+        }
+        
+        body.forest {
+            background: linear-gradient(135deg, #134e5e, #71b280, #2d5a27, #4a7c59, #134e5e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+        }
+        
+        body.purple {
+            background: linear-gradient(135deg, #667eea, #764ba2, #9d50bb, #6f42c1, #667eea);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+        }
+        
+        body.ocean {
+            background: linear-gradient(135deg, #2193b0, #6dd5ed, #1e3c72, #2a5298, #2193b0);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+        }
+        
+        body.fire {
+            background: linear-gradient(135deg, #f12711, #f5af19, #e73c7e, #23a6d5, #f12711);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+        }
+        
+        body.gold {
+            background: linear-gradient(135deg, #f7971e, #ffd200, #ffb347, #daa520, #f7971e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #000000;
+        }
+        
+        .timer-container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark .timer-container {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .light .timer-container {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .neon .timer-container {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 30px #00ffff;
+        }
+        
+        .minimal .timer-container {
+            background: transparent;
+            box-shadow: none;
+            border: 2px solid #000000;
+        }
+        
+        .title {
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .title.small { font-size: 1.2em; }
+        .title.medium { font-size: 1.8em; }
+        .title.large { font-size: 2.4em; }
+        .title.xlarge { font-size: 3.2em; }
+        
+        .neon .title {
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .countdown {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .countdown.small { font-size: 2em; }
+        .countdown.medium { font-size: 3.5em; }
+        .countdown.large { font-size: 5em; }
+        .countdown.xlarge { font-size: 7em; }
+        
+        .neon .countdown {
+            text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+        }
+        
+        .time-part {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .light .time-part {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .neon .time-part {
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+        }
+        
+        .minimal .time-part {
+            background: transparent;
+            border: 1px solid #000000;
+        }
+        
+        .time-label {
+            display: block;
+            font-size: 0.3em;
+            margin-top: 5px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .finished {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .neon .finished {
+            animation: neonPulse 1s infinite;
+        }
+        
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff; }
+            50% { text-shadow: 0 0 40px #00ffff, 0 0 80px #00ffff, 0 0 120px #00ffff; }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <div class="title" id="timerTitle">Stream Starting Soon!</div>
+        <div class="countdown" id="countdown">
+            <span class="time-part">
+                <span id="minutes">00</span>
+                <span class="time-label">min</span>
+            </span>
+            <span class="time-part">
+                <span id="seconds">00</span>
+                <span class="time-label">sec</span>
+            </span>
+        </div>
+    </div>
+
+    <script>
+        let countdown;
+        let totalSeconds;
+        let isPaused = false;
+        let originalDuration;
+        
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                title: params.get('title') || 'Stream Starting Soon!',
+                duration: parseInt(params.get('duration')) || 10,
+                theme: params.get('theme') || 'dark',
+                fontSize: params.get('fontSize') || 'medium'
+            };
+        }
+        
+        function initTimer() {
+            const params = getUrlParams();
+            
+            document.getElementById('timerTitle').textContent = params.title;
+            document.body.className = params.theme;
+            
+            const elements = document.querySelectorAll('.title, .countdown');
+            elements.forEach(el => {
+                el.className = el.className.replace(/\b(small|medium|large|xlarge)\b/g, '');
+                el.classList.add(params.fontSize);
+            });
+            
+            totalSeconds = params.duration * 60;
+            originalDuration = totalSeconds;
+            updateDisplay();
+            startCountdown();
+        }
+        
+        function updateDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+        
+        function startCountdown() {
+            countdown = setInterval(() => {
+                if (!isPaused) {
+                    totalSeconds--;
+                    updateDisplay();
+                    
+                    if (totalSeconds <= 0) {
+                        clearInterval(countdown);
+                        document.getElementById('timerTitle').textContent = '🎬 LIVE NOW!';
+                        document.querySelector('.timer-container').classList.add('finished');
+                    }
+                }
+            }, 1000);
+        }
+        
+        
+        // Initialize when page loads
+        window.addEventListener('load', initTimer);
+        
+    </script>
+</body>
+</html>

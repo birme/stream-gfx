@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Timer Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .timer-url {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e1e5e9;
+            word-break: break-all;
+            display: none;
+        }
+        
+        .copy-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #28a745;
+            font-size: 14px;
+            width: auto;
+        }
+        
+        .preview {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .preview iframe {
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+        }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex !important;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal !important;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .checkbox-item span {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Stream Graphics Setup</h1>
+        
+        <div class="form-group">
+            <label for="slateType">Type of Slate:</label>
+            <select id="slateType" onchange="toggleSlateOptions()">
+                <option value="timer">Countdown Timer</option>
+                <option value="thankyou">Thank You Slate</option>
+                <option value="resuming">Stream Resuming Soon</option>
+            </select>
+        </div>
+        
+        <form id="timerForm">
+            <div class="form-group timer-only">
+                <label for="title">Timer Title:</label>
+                <input type="text" id="title" value="Stream Starting Soon!" placeholder="Enter timer title">
+            </div>
+            
+            <div class="form-group timer-only">
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" id="duration" value="10" min="1" max="999" placeholder="Enter duration in minutes">
+            </div>
+            
+            <div class="form-group thankyou-only" style="display: none;">
+                <label for="thankYouMessage">Main Message:</label>
+                <input type="text" id="thankYouMessage" value="Thank You for Watching!" placeholder="Enter your message">
+            </div>
+            
+            <div class="form-group thankyou-only" style="display: none;">
+                <label for="subMessage">Sub Message (optional):</label>
+                <input type="text" id="subMessage" value="Follow for more content!" placeholder="Enter sub message">
+            </div>
+            
+            <div class="form-group thankyou-only" style="display: none;">
+                <label>Social Media Icons:</label>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="showX" checked>
+                        <span>X (Twitter)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="showLinkedIn">
+                        <span>LinkedIn</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="showYouTube" checked>
+                        <span>YouTube</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="showTwitch" checked>
+                        <span>Twitch</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group resuming-only" style="display: none;">
+                <label for="resumingMessage">Main Message:</label>
+                <input type="text" id="resumingMessage" value="Stream Resuming Soon!" placeholder="Enter your message">
+            </div>
+            
+            <div class="form-group resuming-only" style="display: none;">
+                <label for="resumingSubMessage">Sub Message (optional):</label>
+                <input type="text" id="resumingSubMessage" value="Taking a quick break..." placeholder="Enter sub message">
+            </div>
+            
+            <div class="form-group">
+                <label for="theme">Theme:</label>
+                <select id="theme">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                    <option value="neon">Neon Cyan</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="sunset">Sunset Orange</option>
+                    <option value="forest">Forest Green</option>
+                    <option value="purple">Purple Galaxy</option>
+                    <option value="ocean">Ocean Blue</option>
+                    <option value="fire">Fire Red</option>
+                    <option value="gold">Gold Luxury</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="fontSize">Font Size:</label>
+                <select id="fontSize">
+                    <option value="small">Small</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="large">Large</option>
+                    <option value="xlarge">Extra Large</option>
+                </select>
+            </div>
+            
+            <button type="submit" id="generateBtn">Generate Timer URL</button>
+        </form>
+        
+        <div class="timer-url" id="timerUrl">
+            <strong id="urlLabel">Timer URL for OBS:</strong><br>
+            <span id="urlText"></span>
+            <button class="copy-btn" onclick="copyUrl()">Copy URL</button>
+        </div>
+        
+        <div class="preview">
+            <h3>Preview:</h3>
+            <iframe id="previewFrame" width="400" height="200"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function toggleSlateOptions() {
+            const slateType = document.getElementById('slateType').value;
+            const timerOnlyElements = document.querySelectorAll('.timer-only');
+            const thankYouOnlyElements = document.querySelectorAll('.thankyou-only');
+            const resumingOnlyElements = document.querySelectorAll('.resuming-only');
+            const generateBtn = document.getElementById('generateBtn');
+            const urlLabel = document.getElementById('urlLabel');
+            
+            // Hide all option groups first
+            timerOnlyElements.forEach(el => el.style.display = 'none');
+            thankYouOnlyElements.forEach(el => el.style.display = 'none');
+            resumingOnlyElements.forEach(el => el.style.display = 'none');
+            
+            if (slateType === 'timer') {
+                timerOnlyElements.forEach(el => el.style.display = 'block');
+                generateBtn.textContent = 'Generate Timer URL';
+                urlLabel.textContent = 'Timer URL for OBS:';
+            } else if (slateType === 'thankyou') {
+                thankYouOnlyElements.forEach(el => el.style.display = 'block');
+                generateBtn.textContent = 'Generate Thank You Slate URL';
+                urlLabel.textContent = 'Thank You Slate URL for OBS:';
+            } else if (slateType === 'resuming') {
+                resumingOnlyElements.forEach(el => el.style.display = 'block');
+                generateBtn.textContent = 'Generate Resuming Slate URL';
+                urlLabel.textContent = 'Resuming Slate URL for OBS:';
+            }
+        }
+        
+        document.getElementById('timerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const slateType = document.getElementById('slateType').value;
+            const theme = document.getElementById('theme').value;
+            const fontSize = document.getElementById('fontSize').value;
+            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
+            
+            let slateUrl;
+            
+            if (slateType === 'timer') {
+                const title = document.getElementById('title').value;
+                const duration = document.getElementById('duration').value;
+                
+                const params = new URLSearchParams({
+                    title: title,
+                    duration: duration,
+                    theme: theme,
+                    fontSize: fontSize
+                });
+                
+                slateUrl = `${baseUrl}timer.html?${params.toString()}`;
+            } else if (slateType === 'thankyou') {
+                const thankYouMessage = document.getElementById('thankYouMessage').value;
+                const subMessage = document.getElementById('subMessage').value;
+                const showX = document.getElementById('showX').checked;
+                const showLinkedIn = document.getElementById('showLinkedIn').checked;
+                const showYouTube = document.getElementById('showYouTube').checked;
+                const showTwitch = document.getElementById('showTwitch').checked;
+                
+                const params = new URLSearchParams({
+                    type: 'thankyou',
+                    message: thankYouMessage,
+                    submessage: subMessage,
+                    theme: theme,
+                    fontSize: fontSize,
+                    showX: showX,
+                    showLinkedIn: showLinkedIn,
+                    showYouTube: showYouTube,
+                    showTwitch: showTwitch
+                });
+                
+                slateUrl = `${baseUrl}slate.html?${params.toString()}`;
+            } else if (slateType === 'resuming') {
+                const resumingMessage = document.getElementById('resumingMessage').value;
+                const resumingSubMessage = document.getElementById('resumingSubMessage').value;
+                
+                const params = new URLSearchParams({
+                    type: 'resuming',
+                    message: resumingMessage,
+                    submessage: resumingSubMessage,
+                    theme: theme,
+                    fontSize: fontSize
+                });
+                
+                slateUrl = `${baseUrl}slate.html?${params.toString()}`;
+            }
+            
+            document.getElementById('urlText').textContent = slateUrl;
+            document.getElementById('timerUrl').style.display = 'block';
+            
+            document.getElementById('previewFrame').src = slateUrl;
+            document.querySelector('.preview').style.display = 'block';
+        });
+        
+        function copyUrl() {
+            const urlText = document.getElementById('urlText').textContent;
+            navigator.clipboard.writeText(urlText).then(function() {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#dc3545';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#28a745';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
